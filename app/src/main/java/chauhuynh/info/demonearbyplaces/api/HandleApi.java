@@ -119,7 +119,7 @@ public class HandleApi {
     private String getNearbyPlacesUrl(Context context, double latitude, double longitude, String type) {
         StringBuilder stringBuilder = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
         stringBuilder.append("location=").append(latitude).append(",").append(longitude);
-        stringBuilder.append("&radius=" + 10000);
+        stringBuilder.append("&radius=" + 1000);
         stringBuilder.append("&type=").append(type);
         stringBuilder.append("&sensor=true");
         stringBuilder.append("&key=").append(context.getResources().getString(R.string.map_api_key));

@@ -65,7 +65,8 @@ public class MyLocation extends AppCompatActivity implements LocationListener, G
     private LocationRequest mLocationRequest;
     private GoogleApiClient mGoogleApiClient;
     private GoogleMap mMap;
-    private Marker marker;
+    private Marker myMarker;
+    private List<Marker> listNearbyMarker = new ArrayList<>();
 
     private EditText edt_input_search;
     private RelativeLayout layoutSuggestSearch;
@@ -102,13 +103,14 @@ public class MyLocation extends AppCompatActivity implements LocationListener, G
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
                 //Show Toast request permission
-                Toast.makeText(this, "Permission to use Camera", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Permission to use Location", Toast.LENGTH_SHORT).show();
             }
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
         } else {
             //Goto Continue
             initializeLocationAPI();
             onMarkerClick();
+            onMapClickListener();
         }
     }
 
@@ -119,6 +121,7 @@ public class MyLocation extends AppCompatActivity implements LocationListener, G
                 //Goto Continue
                 initializeLocationAPI();
                 onMarkerClick();
+                onMapClickListener();
 
 
             } else {
@@ -223,8 +226,8 @@ public class MyLocation extends AppCompatActivity implements LocationListener, G
                 if (geometry != null) {
                     chauhuynh.info.demonearbyplaces.model.Location location = geometry.getLocation();
 
-                    if (marker != null) {
-                        marker.remove();
+                    if (myMarker != null) {
+                        myMarker.remove();
                     }
 
                     latitude = Double.parseDouble(location.getLat());
@@ -316,7 +319,10 @@ public class MyLocation extends AppCompatActivity implements LocationListener, G
             // TODO: Consider calling
             return;
         }
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        }
     }
 
     private void onMarkerClick() {
@@ -368,6 +374,22 @@ public class MyLocation extends AppCompatActivity implements LocationListener, G
         }
     }
 
+    private void onMapClickListener() {
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+
+                bottomNavigationView.setVisibility(View.GONE);
+
+                if (myMarker != null) {
+                    myMarker.remove();
+                }
+
+                addMarkerToMap(latLng.latitude, latLng.longitude);
+            }
+        });
+    }
+
     private void addMarkerToMap(double latitude, double longitude) {
 
         LatLng latLng = new LatLng(latitude, longitude);
@@ -375,9 +397,15 @@ public class MyLocation extends AppCompatActivity implements LocationListener, G
                 .position(latLng)
                 .title("Your Location")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-        marker = mMap.addMarker(markerOptions);
+        myMarker = mMap.addMarker(markerOptions);
 
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14.0f));
+
+        if (listNearbyMarker != null)
+            for (int i = 0; i < listNearbyMarker.size(); i++) {
+                listNearbyMarker.get(i).remove();
+            }
+        getNearbyPlaces(latitude, longitude, "hotel");
     }
 
     private void addNearbyMarkerToMap(double latitude, double longitude, String placeName, int position) {
@@ -390,7 +418,7 @@ public class MyLocation extends AppCompatActivity implements LocationListener, G
 
         markerOptions.snippet(String.valueOf(position));
 
-        marker = mMap.addMarker(markerOptions);
+        listNearbyMarker.add(mMap.addMarker(markerOptions));
 
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14.0f));
     }

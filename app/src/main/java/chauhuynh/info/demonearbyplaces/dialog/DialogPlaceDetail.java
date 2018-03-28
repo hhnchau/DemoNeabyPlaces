@@ -40,7 +40,9 @@ public class DialogPlaceDetail {
         return Instance;
     }
 
-    public void show(final Context context, Results results) {
+    private Result result;
+
+    public void show(final Context context, final Results results) {
         if (context != null && context instanceof Activity && !((Activity) context).isFinishing()) {
             final Dialog dialog = new Dialog(context, R.style.dialog_full_transparent_background);
             dialog.setOwnerActivity((Activity) context);
@@ -61,6 +63,14 @@ public class DialogPlaceDetail {
                     }
                 });
 
+                dialog.findViewById(R.id.cv).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                        DialogPlaceMoreDetail.getInstance().show(context, result);
+                    }
+                });
+
                 final TextView content = dialog.findViewById(R.id.txt_content);
 
 
@@ -75,7 +85,7 @@ public class DialogPlaceDetail {
                 HandleApi.getInstance().getDetailPlaces(context, p, new CallBackApi() {
                     @Override
                     public void resultApi(Object object) {
-                        Result result = (Result) object;
+                        result = (Result) object;
                         if (result != null) {
                             StringBuilder stringBuilder = new StringBuilder();
                             stringBuilder.append(result.getName()).append("\n");
