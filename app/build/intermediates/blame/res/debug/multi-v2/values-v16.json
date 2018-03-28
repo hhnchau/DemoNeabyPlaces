@@ -1,0 +1,38 @@
+{
+    "logs": [
+        {
+            "outputFile": "/home/appro/bk/DemoNeabyPlaces-master/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-v16/values-v16.xml",
+            "map": [
+                {
+                    "source": "/home/appro/.gradle/caches/transforms-1/files-1.1/appcompat-v7-26.0.2.aar/84823833d6fcf5aef122122d561a4cb7/res/values-v16/values-v16.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "5",
+                        "endColumns": "12",
+                        "endOffsets": "223"
+                    },
+                    "to": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "121",
+                        "endLines": "6",
+                        "endColumns": "12",
+                        "endOffsets": "289"
+                    }
+                },
+                {
+                    "source": "/home/appro/.gradle/caches/transforms-1/files-1.1/support-compat-26.0.2.aar/789fc619c69ae4d8aee6878a9503b1ea/res/values-v16/values-v16.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "65",
+                        "endOffsets": "116"
+                    }
+                }
+            ]
+        }
+    ]
+}
